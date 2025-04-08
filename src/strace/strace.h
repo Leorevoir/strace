@@ -16,6 +16,7 @@
     #define     MAX_SYSCALL     (328)
     #define     EXIT_SIGNAL     (231)
     #define     EXECVE_SIGNAL   (59)
+    #define     MAX_BUFFER      (4096)
     #define     PROC_PATH       ("/proc/%d/exe")
 
 typedef struct flag_s {
@@ -44,7 +45,7 @@ void safe_fork(pid_t *pid);
 /*
  * main entry point
  */
-void strace_init(const char *filename, strace_t *strace, char **env);
+void strace_init(strace_t *strace, char **env);
 
 /*
  * ptrace and execvp program
@@ -56,5 +57,10 @@ void strace_execvp_prog(strace_t *strace);
  */
 void strace_start_tracing(strace_t *strace);
 void strace_display_trace(strace_t *strace);
+
+/*
+ * tools
+ */
+int *get_type_array(size_t id);
 
 #endif /* STRACE_H_ */
