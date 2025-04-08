@@ -4,3 +4,6 @@ objects/
 !strace/
 tests/main.c
 tests/a.out
+coding-style-reports.log
+a.out
+test

@@ -34,8 +34,9 @@ int parse_arguments(int argc, char **argv, char **env)
     }
     if (argc == 3 && strcmp(argv[1], "-s") == 0) {
         strace.flag.s = true;
+        strace.prog = argv[2];
     }
-    strace_init(argv[1], &strace, env);
+    strace_init(&strace, env);
     return SUCCESS;
 }
 

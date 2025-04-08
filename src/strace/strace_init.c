@@ -15,9 +15,9 @@ static void strace_ctor(strace_t *strace, const char *filename, char **env)
     safe_fork(&strace->pid);
 }
 
-void strace_init(const char *restrict filename, strace_t *strace, char **env)
+void strace_init(strace_t *strace, char **env)
 {
-    strace_ctor(strace, filename, env);
+    strace_ctor(strace, strace->prog, env);
     switch (strace->pid) {
         case 0:
             strace_execvp_prog(strace);

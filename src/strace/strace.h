@@ -43,7 +43,7 @@ void safe_fork(pid_t *pid);
 /*
  * main entry point
  */
-void strace_init(const char *filename, strace_t *strace, char **env);
+void strace_init(strace_t *strace, char **env);
 
 /*
  * ptrace and execvp program
