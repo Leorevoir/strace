@@ -72,3 +72,9 @@ char *register_to_stat(pid_t pid, size_t reg)
         statbuf->st_mode & (mode_t)~__S_IFMT, statbuf->st_size);
     return result;
 }
+
+char *register_to_void(__attribute__((unused)) pid_t pid,
+    __attribute__((unused)) size_t reg)
+{
+    return "";
+}

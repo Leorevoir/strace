@@ -34,6 +34,7 @@ typedef struct strace_s {
     flag_t flag;
     char *prog;
     struct user_regs_struct regs;
+    int env_count;
 } strace_t;
 
 /*

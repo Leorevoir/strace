@@ -14,10 +14,39 @@
 #include <sys/ptrace.h>
 #include <string.h>
 
+static void display_rax_flag_s(strace_t *strace)
+{
+    switch (table[strace->regs.orig_rax].return_type) {
+        case NUM:
+            fprintf(stderr, "%s\n", register_to_signed(strace->pid, strace->regs.rax));
+            break;
+        case UNSIGNED:
+            fprintf(stderr, "%s\n", register_to_unsigned(strace->pid, strace->regs.rax));
+            break;
+        case STRING:
+            fprintf(stderr, "\"%s\"\n",
+                register_to_string(strace->pid, strace->regs.rax));
+            break;
+        case VOID_P:
+            fprintf(stderr, "NULL\n");
+            break;
+        case STRUCT_STAT_P:
+            fprintf(stderr, "%s\n", register_to_stat(strace->pid, strace->regs.rax));
+            break;
+        default:
+            fprintf(stderr, "0x%llx\n", strace->regs.rax);
+            break;
+    }
+}
+
 static void display_return(strace_t *strace)
 {
     if (strace->regs.orig_rax == EXIT_SIGNAL) {
         fprintf(stderr, "?\n");
+        return;
+    }
+    if (strace->flag.s) {
+        display_rax_flag_s(strace);
         return;
     }
     fprintf(stderr, "0x%llx\n", strace->regs.rax);
@@ -93,7 +122,9 @@ static void display_syscalls(strace_t *strace)
 {
     fprintf(stderr, "%s(", table[strace->regs.orig_rax].name);
     if (strace->regs.orig_rax == EXECVE_SIGNAL) {
-        fprintf(stderr, "\"%s\", [\"%s\"], ", strace->prog, strace->prog);
+        fprintf(stderr, "\"%s\", [\"%s\"], %p /* %d vars */) = 0\n",
+            strace->prog, strace->prog, (void *)strace->env,
+            strace->env_count);
         return;
     }
     if (strace->flag.s) {
