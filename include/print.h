@@ -15,6 +15,9 @@
     #include <sys/stat.h>
     #include <sys/types.h>
     #include <stddef.h>
+
+    #define LONG_SIZE   sizeof(long int)
+
 /*
  * prints
 */
@@ -27,13 +30,13 @@ typedef struct string_mode_s {
 } string_mode_t;
 
 static const string_mode_t stat_strings[7] = {
-    {__S_IFCHR, "S_IFCHR"},
-    {__S_IFBLK, "S_IFBLK"},
-    {__S_IFDIR, "S_IFDIR"},
-    {__S_IFIFO, "S_IFIFO"},
-    {__S_IFLNK, "S_IFLNK"},
-    {__S_IFREG, "S_IFREG"},
-    {__S_IFSOCK, "S_IFSOCK"}
+    {S_IFCHR, "S_IFCHR"},
+    {S_IFBLK, "S_IFBLK"},
+    {S_IFDIR, "S_IFDIR"},
+    {S_IFIFO, "S_IFIFO"},
+    {S_IFLNK, "S_IFLNK"},
+    {S_IFREG, "S_IFREG"},
+    {S_IFSOCK, "S_IFSOCK"}
 };
 
 #endif

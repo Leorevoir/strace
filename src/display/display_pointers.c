@@ -12,7 +12,7 @@ char *register_to_string(pid_t pid, size_t reg)
     char __attribute__((cleanup(free_char)))*ptr = NULL;
     long int rv = 0;
     size_t size = 0;
-    const size_t long_int_size = sizeof(long int);
+    const size_t long_int_size = LONG_SIZE;
 
     ptr = malloc(MAX_BUFFER);
     for (;;) {
@@ -30,27 +30,45 @@ char *register_to_string(pid_t pid, size_t reg)
     return ptr;
 }
 
+static struct stat *get_stat(pid_t pid, size_t reg)
+{
+    struct stat *statbuf = malloc(sizeof(struct stat));
+    long data;
+    size_t offset = 0;
+
+    for (offset = 0; offset < sizeof(struct stat); offset += LONG_SIZE) {
+        data = ptrace(PTRACE_PEEKDATA, pid, reg + offset, NULL);
+        if (data == -1) {
+            free(statbuf);
+            return NULL;
+        }
+        if (offset + LONG_SIZE > sizeof(struct stat)) {
+            memcpy((char *)statbuf + offset, &data,
+                sizeof(struct stat) - offset);
+        } else {
+            memcpy((char *)statbuf + offset, &data, LONG_SIZE);
+        }
+    }
+    return statbuf;
+}
+
 static char *get_mode(mode_t mode)
 {
-    for (size_t i = 0; i < 7; i++) {
-        if ((mode & __S_IFMT) == stat_strings[i].mode) {
+    for (int i = 0; i < 7; ++i) {
+        if (stat_strings[i].mode == (mode & S_IFMT)) {
             return stat_strings[i].string_mode;
         }
     }
-    return NULL;
+    return "NULL";
 }
 
 char *register_to_stat(pid_t pid, size_t reg)
 {
-    struct stat statbuf;
-    char *result = malloc(MAX_BUFFER);
+    struct stat *statbuf = get_stat(pid, reg);
+    char *result = malloc(sizeof(char) * MAX_BUFFER);
 
-    if (ptrace(PTRACE_PEEKDATA, pid, reg, &statbuf) == -1) {
-        free(result);
-        return NULL;
-    }
-    snprintf(result, MAX_BUFFER, "{st_mode=%s|%o, st_size=%ld, ...}",
-        get_mode(statbuf.st_mode), statbuf.st_mode &
-        __S_IFMT, statbuf.st_size);
+    snprintf(result, MAX_BUFFER,
+        "{st_mode=%s|%04o, st_size=%ld, ...}", get_mode(statbuf->st_mode),
+        statbuf->st_mode & (mode_t)~__S_IFMT, statbuf->st_size);
     return result;
 }
