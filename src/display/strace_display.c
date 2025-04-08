@@ -23,13 +23,14 @@ static void display_return(strace_t *strace)
     fprintf(stderr, "0x%llx\n", strace->regs.rax);
 }
 
-
-
 static void s_flag_switch_types(strace_t *strace, int types, size_t reg)
 {
     switch (types) {
         case NUM:
-            fprintf(stderr, "%ld", reg);
+            fprintf(stderr, "%s", register_to_signed(strace->pid, reg));
+            break;
+        case UNSIGNED:
+            fprintf(stderr, "%s", register_to_unsigned(strace->pid, reg));
             break;
         case STRING:
             fprintf(stderr, "\"%s\"",

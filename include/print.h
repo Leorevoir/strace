@@ -23,6 +23,8 @@
 */
 char *register_to_string(pid_t pid, size_t reg);
 char *register_to_stat(pid_t pid, size_t reg);
+char *register_to_signed(pid_t pid, size_t reg);
+char *register_to_unsigned(pid_t pid, size_t reg);
 
 typedef struct string_mode_s {
     mode_t mode;
