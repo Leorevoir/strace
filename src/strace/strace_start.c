@@ -25,7 +25,8 @@ void strace_start_tracing(strace_t *strace)
     int stat_loc = 0;
 
     safe_waitpid(strace->pid, &stat_loc, 0);
-    if (ptrace(PTRACE_SETOPTIONS, strace->pid, NULL, PTRACE_O_TRACEEXIT) == -1) {
+    if (ptrace(
+        PTRACE_SETOPTIONS, strace->pid, NULL, PTRACE_O_TRACEEXIT) == -1) {
         perror("ptrace");
     }
     while (!WIFEXITED(stat_loc)) {

@@ -58,6 +58,6 @@ void strace_display_trace(strace_t *strace)
     }
     display_syscalls(strace);
     if (strace->regs.orig_rax == EXIT_SIGNAL) {
-        fprintf(stderr,"+++ exited with %lld +++\n", strace->regs.rdi);
+        fprintf(stderr, "+++ exited with %lld +++\n", strace->regs.rdi);
     }
 }
