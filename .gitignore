@@ -1,0 +1,6 @@
+strace
+*.o
+objects/
+!strace/
+tests/main.c
+tests/a.out
