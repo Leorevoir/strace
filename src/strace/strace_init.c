@@ -11,6 +11,7 @@
 #include <limits.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stddef.h>
 
 static void strace_ctor(strace_t *strace, char *filename, char **env)
 {
@@ -34,9 +35,9 @@ static char *get_filename(const char *restrict path, const strace_t *strace)
     return strdup(path);
 }
 
-void strace_init(const char *restrict filename, strace_t *strace, char **env)
+void strace_init(strace_t *strace, char **env)
 {
-    strace_ctor(strace, get_filename(filename, strace), env);
+    strace_ctor(strace, get_filename(strace->prog, strace), env);
     switch (strace->pid) {
         case 0:
             strace_execvp_prog(strace);
