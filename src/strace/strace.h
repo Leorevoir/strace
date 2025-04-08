@@ -16,6 +16,7 @@
     #define     MAX_SYSCALL     (328)
     #define     EXIT_SIGNAL     (231)
     #define     EXECVE_SIGNAL   (59)
+    #define     MAX_BUFFER      (4096)
 
 typedef struct flag_s {
     bool p;
