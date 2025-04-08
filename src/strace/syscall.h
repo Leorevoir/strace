@@ -1,15 +1,14 @@
 /*
-** EPITECH PROJECT, 2025
+** EPITECH PROJECT, 2021
 ** strace
 ** File description:
 ** syscalls table
 */
 
-#ifndef     SYSCALL_H_
+#ifndef SYSCALL_H_
     #define     SYSCALL_H_
 
     #include <stdlib.h>
-    #include <stdint.h>
     #include "strace.h"
 
     #define     NUM     1
@@ -123,7 +122,7 @@
 
 typedef struct syscall_s {
     int id;
-    const char *name;
+    char *name;
     int arg_count;
     int return_type;
     int type1;
@@ -134,7 +133,8 @@ typedef struct syscall_s {
     int type6;
 } syscall_t;
 
-static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
+static const syscall_t table[330] = {
+    {0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
     {1, "write", 3, NUM, NUM, STRING, NUM, 0, 0, 0},
     {2, "open", 2, NUM, STRING, NUM, 0, 0, 0, 0},
     {3, "close", 1, NUM, NUM, 0, 0, 0, 0, 0},
@@ -171,16 +171,18 @@ static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
     {33, "dup2", 2, NUM, NUM, NUM, 0, 0, 0, 0},
     {34, "pause", 1, NUM, VOID, 0, 0, 0, 0, 0},
     {35, "nanosleep", 2, NUM, CONST_STRUCT_TIMESPEC_P, STRUCT_TIMESPEC_P, 0, 0,
-        0, 0}, {36, "getitimer", 2, NUM, NUM, STRUCT_ITIMERVAL_P, 0, 0, 0, 0},
+        0, 0},
+    {36, "getitimer", 2, NUM, NUM, STRUCT_ITIMERVAL_P, 0, 0, 0, 0},
     {37, "alarm", 1, UNSIGNED, UNSIGNED, 0, 0, 0, 0, 0},
-    {38, "setitimer", 3, NUM, NUM, CONST_STRUCT_ITIMERVAL_P, STRUCT_ITIMERVAL_P,
-        0, 0, 0}, {39, "getpid", 1, NUM, VOID, 0, 0, 0, 0, 0},
+    {38, "setitimer", 3, NUM, NUM, CONST_STRUCT_ITIMERVAL_P,
+        STRUCT_ITIMERVAL_P, 0, 0, 0},
+    {39, "getpid", 1, NUM, VOID, 0, 0, 0, 0, 0},
     {40, "sendfile", 4, NUM, NUM, NUM, NUM_P, NUM, 0, 0},
     {41, "socket", 3, NUM, NUM, NUM, NUM, 0, 0, 0},
     {42, "connect", 3, NUM, NUM, CONST_STRUCT_SOCKADDR_P, SOCKLEN_T, 0, 0, 0},
     {43, "accept", 3, NUM, NUM, STRUCT_SOCKADDR_P, SOCKLEN_T_P, 0, 0, 0},
-    {44, "sendto", 6, NUM, NUM, CONST_VOID_P, NUM, NUM, CONST_STRUCT_SOCKADDR_P,
-        SOCKLEN_T},
+    {44, "sendto", 6, NUM, NUM, CONST_VOID_P, NUM, NUM,
+        CONST_STRUCT_SOCKADDR_P, SOCKLEN_T},
     {45, "recvfrom", 6, NUM, NUM, VOID_P, NUM, NUM, STRUCT_SOCKADDR_P,
         SOCKLEN_T_P},
     {46, "sendmsg", 3, NUM, NUM, CONST_STRUCT_MSGHDR_P, NUM, 0, 0, 0},
@@ -282,11 +284,13 @@ static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
     {142, "sched_setparam", 2, NUM, NUM, CONST_STRUCT_SCHED_PARAM_P, 0, 0, 0,
         0},
     {143, "sched_getparam", 2, NUM, NUM, STRUCT_SCHED_PARAM_P, 0, 0, 0, 0},
-    {144, "sched_setscheduler", 3, NUM, NUM, NUM, CONST_STRUCT_SCHED_PARAM_P, 0,
-        0, 0}, {145, "sched_getscheduler", 1, NUM, NUM, 0, 0, 0, 0, 0},
+    {144, "sched_setscheduler", 3, NUM, NUM, NUM, CONST_STRUCT_SCHED_PARAM_P,
+        0, 0, 0},
+    {145, "sched_getscheduler", 1, NUM, NUM, 0, 0, 0, 0, 0},
     {146, "sched_get_priority_max", 1, NUM, NUM, 0, 0, 0, 0, 0},
     {147, "sched_get_priority_min", 1, NUM, NUM, 0, 0, 0, 0, 0},
-    {148, "sched_rr_get_interval", 2, NUM, NUM, STRUCT_TIMESPEC_P_, 0, 0, 0, 0},
+    {148, "sched_rr_get_interval", 2, NUM, NUM, STRUCT_TIMESPEC_P_,
+        0, 0, 0, 0},
     {149, "mlock", 2, NUM, CONST_VOID_P, NUM, 0, 0, 0, 0},
     {150, "munlock", 2, NUM, CONST_VOID_P, NUM, 0, 0, 0, 0},
     {151, "mlockall", 1, NUM, NUM, 0, 0, 0, 0, 0},
@@ -319,8 +323,9 @@ static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
     {177, "get_kernel_syms", 1, NUM, STRUCT_KERNEL_SYM_P, 0, 0, 0, 0, 0},
     {178, "query_module", 5, NUM, STRING, NUM, VOID_P, NUM, NUM_P, 0},
     {179, "quotactl", 4, NUM, NUM, STRING, NUM, CADDR_T, 0, 0},
-    {180, "nfsservctl", 3, NUM, NUM, STRUCT_NFSCTL_ARG_P, UNION_NFSCTL_RES_P, 0,
-        0, 0}, {181, "getpmsg", 6, 0, 0, 0, 0, 0, 0, 0},
+    {180, "nfsservctl", 3, NUM, NUM, STRUCT_NFSCTL_ARG_P, UNION_NFSCTL_RES_P,
+        0, 0, 0},
+    {181, "getpmsg", 6, 0, 0, 0, 0, 0, 0, 0},
     {182, "putpmsg", 6, 0, 0, 0, 0, 0, 0, 0},
     {183, "afs_syscall", 6, 0, 0, 0, 0, 0, 0, 0},
     {184, "tuxcall", 6, 0, 0, 0, 0, 0, 0, 0},
@@ -364,8 +369,8 @@ static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
     {220, "semtimedop", 4, NUM, NUM, STRUCT_SEMBUF_P, NUM,
         CONST_STRUCT_TIMESPEC_P, 0, 0},
     {221, "fadvise64", 6, 0, 0, 0, 0, 0, 0, 0},
-    {222, "timer_create", 3, NUM, CLOCKID_T, STRUCT_SIGEVENT_P, TIMER_T_P, 0, 0,
-        0},
+    {222, "timer_create", 3, NUM, CLOCKID_T, STRUCT_SIGEVENT_P, TIMER_T_P,
+        0, 0, 0},
     {223, "timer_settime", 4, NUM, TIMER_T, NUM, CONST_STRUCT_ITIMERSPEC_P,
         STRUCT_ITIMERSPEC_P, 0, 0},
     {224, "timer_gettime", 2, NUM, TIMER_T, STRUCT_ITIMERSPEC_P, 0, 0, 0, 0},
@@ -394,8 +399,8 @@ static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
     {243, "mq_timedreceive", 5, NUM, MQD_T, STRING, NUM, UNSIGNED_P,
         CONST_STRUCT_TIMESPEC_P, 0},
     {244, "mq_notify", 2, NUM, MQD_T, CONST_STRUCT_SIGEVENT_P, 0, 0, 0, 0},
-    {245, "mq_getsetattr", 3, NUM, MQD_T, STRUCT_MQ_ATTR_P, STRUCT_MQ_ATTR_P, 0,
-        0, 0},
+    {245, "mq_getsetattr", 3, NUM, MQD_T, STRUCT_MQ_ATTR_P, STRUCT_MQ_ATTR_P,
+        0, 0, 0},
     {246, "kexec_load", 4, NUM, UNSIGNED, UNSIGNED, STRUCT_KEXEC_SEGMENT_P,
         UNSIGNED, 0, 0},
     {247, "waitid", 4, NUM, IDTYPE_T, ID_T, SIGINFO_T_P, NUM, 0, 0},
@@ -429,12 +434,14 @@ static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
     {273, "set_robust_list", 2, NUM, STRUCT_ROBUST_LIST_HEAD_P, NUM, 0, 0, 0,
         0},
     {274, "get_robust_list", 3, NUM, NUM, STRUCT_ROBUST_LIST_HEAD_P, NUM_P, 0,
-        0, 0}, {275, "splice", 6, NUM, NUM, LNUM_P, NUM, LNUM_P, NUM, UNSIGNED},
+        0, 0},
+    {275, "splice", 6, NUM, NUM, LNUM_P, NUM, LNUM_P, NUM, UNSIGNED},
     {276, "tee", 4, NUM, NUM, NUM, NUM, UNSIGNED, 0, 0},
     {277, "sync_file_range", 4, NUM, NUM, OFF64_T, OFF64_T, UNSIGNED, 0, 0},
     {278, "vmsplice", 4, NUM, NUM, CONST_STRUCT_IOVEC_P, UNSIGNED, UNSIGNED, 0,
         0},
-    {279, "move_pages", 6, NUM, NUM, UNSIGNED, VOID_P, CONST_NUM_P, NUM_P, NUM},
+    {279, "move_pages", 6, NUM, NUM, UNSIGNED, VOID_P, CONST_NUM_P, NUM_P,
+        NUM},
     {280, "utimensat", 4, NUM, NUM, STRING, CONST_STRUCT_TIMESPEC, NUM, 0, 0},
     {281, "epoll_pwait", 5, NUM, NUM, STRUCT_EPOLL_EVENT_P, NUM, NUM,
         CONST_SIGSET_T_P, 0},
@@ -462,9 +469,10 @@ static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
     {300, "fanotify_init", 2, NUM, UNSIGNED, UNSIGNED, 0, 0, 0, 0},
     {301, "fanotify_mark", 5, NUM, NUM, UNSIGNED, UNUM64_T, NUM, STRING, 0},
     {302, "prlimit64", 6, 0, 0, 0, 0, 0, 0, 0},
-    {303, "name_to_handle_at", 5, NUM, NUM, STRING, STRUCT_FILE_HANDLE_P, NUM_P,
-        NUM, 0},
-    {304, "open_by_handle_at", 3, NUM, NUM, STRUCT_FILE_HANDLE_P, NUM, 0, 0, 0},
+    {303, "name_to_handle_at", 5, NUM, NUM, STRING, STRUCT_FILE_HANDLE_P,
+        NUM_P, NUM, 0},
+    {304, "open_by_handle_at", 3, NUM, NUM, STRUCT_FILE_HANDLE_P, NUM,
+        0, 0, 0},
     {305, "clock_adjtime", 6, 0, 0, 0, 0, 0, 0, 0},
     {306, "syncfs", 1, NUM, NUM, 0, 0, 0, 0, 0},
     {307, "sendmmsg", 4, NUM, NUM, STRUCT_MMSGHDR_P, UNSIGNED, UNSIGNED, 0, 0},
@@ -476,9 +484,10 @@ static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
         CONST_STRUCT_IOVEC_P, UNSIGNED, UNSIGNED},
     {312, "kcmp", 5, NUM, NUM, NUM, NUM, UNSIGNED, UNSIGNED, 0},
     {313, "finit_module", 3, NUM, NUM, STRING, NUM, 0, 0, 0},
-    {314, "sched_setattr", 3, NUM, NUM, STRUCT_SCHED_ATTR_P, UNSIGNED, 0, 0, 0},
-    {315, "sched_getattr", 4, NUM, NUM, STRUCT_SCHED_ATTR_P, UNSIGNED, UNSIGNED,
-        0, 0},
+    {314, "sched_setattr", 3, NUM, NUM, STRUCT_SCHED_ATTR_P,
+        UNSIGNED, 0, 0, 0},
+    {315, "sched_getattr", 4, NUM, NUM, STRUCT_SCHED_ATTR_P, UNSIGNED,
+        UNSIGNED, 0, 0},
     {316, "renameat2", 5, NUM, NUM, STRING, NUM, STRING, UNSIGNED, 0},
     {317, "seccomp", 3, NUM, UNSIGNED, UNSIGNED, VOID_P, 0, 0, 0},
     {318, "getrandom", 3, NUM, VOID_P, NUM, UNSIGNED, 0, 0, 0},
@@ -492,7 +501,7 @@ static syscall_t table[330] = {{0, "read", 3, NUM, NUM, VOID_P, NUM, 0, 0, 0},
     {326, "copy_file_range", 6, NUM, NUM, LNUM_P, NUM, LNUM_P, NUM, UNSIGNED},
     {327, "preadv2", 5, NUM, NUM, CONST_STRUCT_IOVEC_P, NUM, NUM, NUM, 0},
     {328, "pwritev2", 5, NUM, NUM, CONST_STRUCT_IOVEC_P, NUM, NUM, NUM, 0},
-    {-1, NULL, 0, 0, 0, 0, 0, 0, 0, 0}};
+    {-1, NULL, 0, 0, 0, 0, 0, 0, 0, 0}
+};
 
 #endif  /* !SYSCALL_H_ */
-
