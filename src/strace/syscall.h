@@ -122,7 +122,7 @@
 
 typedef struct syscall_s {
     int id;
-    char *name;
+    const char *name;
     int arg_count;
     int return_type;
     int type1;
