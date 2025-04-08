@@ -8,8 +8,8 @@
 #ifndef STRACE_H_
     #define STRACE_H_
 
-    #include "../../include/macro.h"
-    #include "../../include/utils.h"
+    #include "macro.h"
+    #include "utils.h"
     #include <sys/types.h>
     #include <sys/user.h>
 

@@ -5,7 +5,7 @@
 ** main.c
 */
 
-#include "strace/strace.h"
+#include "strace.h"
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
