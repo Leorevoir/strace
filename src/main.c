@@ -16,14 +16,6 @@ int usage(const char *prgrm)
     return SUCCESS;
 }
 
-static int count_env_var(char **env)
-{
-    int res = 0;
-
-    for (; env[res]; ++res);
-    return res;
-}
-
 int parse_arguments(int argc, char **argv, char **env)
 {
     strace_t strace = {0};
@@ -44,7 +36,6 @@ int parse_arguments(int argc, char **argv, char **env)
         strace.flag.s = true;
         strace.prog = argv[2];
     }
-    strace.env_count = count_env_var(env);
     strace_init(&strace, env);
     return SUCCESS;
 }

@@ -13,10 +13,19 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+static int count_env_var(char **env)
+{
+    int res = 0;
+
+    for (; env[res]; ++res);
+    return 1;
+}
+
 static void strace_ctor(strace_t *strace, char *filename, char **env)
 {
     strace->env = env;
     strace->prog = filename;
+    strace->env_count = count_env_var(env);
     safe_fork(&strace->pid);
 }
 

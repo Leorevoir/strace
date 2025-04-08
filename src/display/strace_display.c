@@ -14,28 +14,27 @@
 #include <sys/ptrace.h>
 #include <string.h>
 
-static void display_rax_flag_s(strace_t *strace)
+static void display_rax_flag_s(strace_t *d)
 {
-    switch (table[strace->regs.orig_rax].return_type) {
+    switch (table[d->regs.orig_rax].return_type) {
         case NUM:
-            fprintf(stderr, "%s\n", register_to_signed(strace->pid, strace->regs.rax));
+            fprintf(stderr, "%s\n", register_to_signed(d->pid, d->regs.rax));
             break;
         case UNSIGNED:
-            fprintf(stderr, "%s\n", register_to_unsigned(strace->pid, strace->regs.rax));
+            fprintf(stderr, "%s\n", register_to_unsigned(d->pid, d->regs.rax));
             break;
         case STRING:
             fprintf(stderr, "\"%s\"\n",
-                register_to_string(strace->pid, strace->regs.rax));
+                register_to_string(d->pid, d->regs.rax));
             break;
         case VOID_P:
             fprintf(stderr, "NULL\n");
             break;
         case STRUCT_STAT_P:
-            fprintf(stderr, "%s\n", register_to_stat(strace->pid, strace->regs.rax));
+            fprintf(stderr, "%s\n", register_to_stat(d->pid, d->regs.rax));
             break;
         default:
-            fprintf(stderr, "0x%llx\n", strace->regs.rax);
-            break;
+            fprintf(stderr, "0x%llx\n", d->regs.rax);
     }
 }
 
