@@ -56,4 +56,9 @@ void strace_execvp_prog(strace_t *strace);
 void strace_start_tracing(strace_t *strace);
 void strace_display_trace(strace_t *strace);
 
+/*
+ * tools
+ */
+int *get_type_array(size_t id);
+
 #endif /* STRACE_H_ */

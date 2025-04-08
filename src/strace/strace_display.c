@@ -26,9 +26,17 @@ static void display_s_flag(__attribute_maybe_unused__ strace_t *strace)
         strace->regs.r8,
         strace->regs.r9
     };
+    int *types = get_type_array(strace->regs.orig_rax);
 
     for (int i = 0; i < table[strace->regs.orig_rax].arg_count; ++i) {
-        if (table[i].)
+        printf("%d, %d\n", i, types[i]);
+
+        if (types[i] == NUM) {
+            fprintf(stderr, "%d\n", (int)registers[i]);
+        }
+        if (types[i] == STRING) {
+            fprintf(stderr, "%s\n", (char *)registers[i]);
+        }
     }
 }
 
