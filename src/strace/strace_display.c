@@ -41,7 +41,25 @@ static char *register_to_string(pid_t pid, size_t reg)
     return ptr;
 }
 
-static void display_s_flag(__attribute_maybe_unused__ strace_t *strace)
+static void s_flag_switch_types(strace_t *strace, int types, size_t reg)
+{
+    switch (types) {
+        case NUM:
+            fprintf(stderr, "%ld", reg);
+            break;
+        case STRING:
+            fprintf(stderr, "\"%s\"",
+                register_to_string(strace->pid, reg));
+            break;
+        case VOID_P:
+            fprintf(stderr, "NULL");
+            break;
+        default:
+            break;
+    }
+}
+
+static void display_s_flag(strace_t *strace)
 {
     const size_t registers[] = {
         strace->regs.rdi,
@@ -53,15 +71,13 @@ static void display_s_flag(__attribute_maybe_unused__ strace_t *strace)
     };
     int *types = get_type_array(strace->regs.orig_rax);
 
-    for (int i = 0; i < table[strace->regs.orig_rax].arg_count; ++i) {
-        if (types[i] == NUM) {
-            fprintf(stderr, "%d\n", (int)registers[i]);
-        }
-        if (types[i] == STRING) {
-            fprintf(stderr, "%s\n",
-                register_to_string(strace->pid, registers[i]));
+    for (int i = 0; i != table[strace->regs.orig_rax].arg_count; ++i) {
+        s_flag_switch_types(strace, types[i], registers[i]);
+        if (i < table[strace->regs.orig_rax].arg_count - 1) {
+            fprintf(stderr, ", ");
         }
     }
+    fprintf(stderr, ") = ");
     free(types);
 }
 
@@ -96,8 +112,8 @@ static void display_syscalls(strace_t *strace)
         display_s_flag(strace);
     } else {
         display_args(strace);
-        display_return(strace);
     }
+    display_return(strace);
 }
 
 void strace_display_trace(strace_t *strace)
