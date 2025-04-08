@@ -13,12 +13,23 @@
     #include <sys/types.h>
     #include <sys/user.h>
 
+    #define     MAX_SYSCALL     (328)
+    #define     EXIT_SIGNAL     (231)
+    #define     EXECVE_SIGNAL   (59)
+
+typedef struct flag_s {
+    bool p;
+    pid_t pid;
+    bool s;
+} flag_t;
+
 /*
  * global strace struct
  */
 typedef struct strace_s {
     pid_t pid;
     char **env;
+    flag_t flag;
     const char *prog;
     struct user_regs_struct regs;
 } strace_t;

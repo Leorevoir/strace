@@ -7,6 +7,7 @@
 
 #include "strace/strace.h"
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 int usage(const char *prgrm)
@@ -26,6 +27,13 @@ int parse_arguments(int argc, char **argv, char **env)
     if (argc == 2 &&
         (strcmp(argv[1], "-help") == 0 || strcmp(argv[1], "-h") == 0)) {
         return usage(argv[0]);
+    }
+    if (argc == 3 && strcmp(argv[1], "-p") == 0 && is_number(argv[2])) {
+        strace.flag.pid = atoi(argv[2]);
+        strace.flag.p = true;
+    }
+    if (argc == 3 && strcmp(argv[1], "-s") == 0) {
+        strace.flag.s = true;
     }
     strace_init(argv[1], &strace, env);
     return SUCCESS;
