@@ -14,4 +14,3 @@ void free_char(char **ptr)
         *ptr = NULL;
     }
 }
-

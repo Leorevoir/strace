@@ -18,24 +18,22 @@ static void display_return(strace_t *strace)
     fprintf(stderr, "0x%llx\n", strace->regs.rax);
 }
 
-char *register_to_string(pid_t pid, size_t reg)
+static char *register_to_string(pid_t pid, size_t reg)
 {
     char __attribute__((cleanup(free_char)))*ptr = NULL;
     long int rv = 0;
     size_t size = 0;
     const size_t long_int_size = sizeof(long int);
 
-    ptr =  malloc(MAX_BUFFER);
+    ptr = malloc(MAX_BUFFER);
     for (;;) {
-        if (size + long_int_size > MAX_BUFFER) {
+        if (size + long_int_size > MAX_BUFFER)
             ptr = realloc(ptr, sizeof(ptr) * 2);
-        }
-        rv = ptrace(PTRACE_PEEKDATA, pid, reg);
-        if (rv == -1) {
+        rv = ptrace(PTRACE_PEEKDATA, pid, reg + size);
+        if (rv == -1)
             return NULL;
-        }
         memcpy(ptr + size, &rv, long_int_size);
-        if (memchr(&size, 0, long_int_size) != NULL) {
+        if (memchr(&rv, 0, long_int_size) != NULL) {
             break;
         }
         size += long_int_size;
@@ -56,12 +54,12 @@ static void display_s_flag(__attribute_maybe_unused__ strace_t *strace)
     int *types = get_type_array(strace->regs.orig_rax);
 
     for (int i = 0; i < table[strace->regs.orig_rax].arg_count; ++i) {
-
         if (types[i] == NUM) {
             fprintf(stderr, "%d\n", (int)registers[i]);
         }
         if (types[i] == STRING) {
-            fprintf(stderr, "%s\n", register_to_string(strace->pid, registers[i]));
+            fprintf(stderr, "%s\n",
+                register_to_string(strace->pid, registers[i]));
         }
     }
     free(types);
