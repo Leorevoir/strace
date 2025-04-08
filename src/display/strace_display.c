@@ -5,7 +5,12 @@
 ** strace_display.c
 */
 
-#include "syscall.h"
+/**
+ * ! Need to specify the path otherwise it get the real syscall.h
+ */
+#include "../../include/syscall.h"
+
+#include "print.h"
 #include <sys/ptrace.h>
 #include <string.h>
 
@@ -18,28 +23,7 @@ static void display_return(strace_t *strace)
     fprintf(stderr, "0x%llx\n", strace->regs.rax);
 }
 
-static char *register_to_string(pid_t pid, size_t reg)
-{
-    char __attribute__((cleanup(free_char)))*ptr = NULL;
-    long int rv = 0;
-    size_t size = 0;
-    const size_t long_int_size = sizeof(long int);
 
-    ptr = malloc(MAX_BUFFER);
-    for (;;) {
-        if (size + long_int_size > MAX_BUFFER)
-            ptr = realloc(ptr, sizeof(ptr) * 2);
-        rv = ptrace(PTRACE_PEEKDATA, pid, reg + size);
-        if (rv == -1)
-            return NULL;
-        memcpy(ptr + size, &rv, long_int_size);
-        if (memchr(&rv, 0, long_int_size) != NULL) {
-            break;
-        }
-        size += long_int_size;
-    }
-    return ptr;
-}
 
 static void s_flag_switch_types(strace_t *strace, int types, size_t reg)
 {
@@ -53,6 +37,9 @@ static void s_flag_switch_types(strace_t *strace, int types, size_t reg)
             break;
         case VOID_P:
             fprintf(stderr, "NULL");
+            break;
+        case STRUCT_STAT_P:
+            fprintf(stderr, register_to_stat(strace->pid, reg));
             break;
         default:
             break;
