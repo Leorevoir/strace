@@ -68,7 +68,7 @@ static void s_flag_switch_types(strace_t *strace, int types, size_t reg)
             fprintf(stderr, "NULL");
             break;
         case STRUCT_STAT_P:
-            fprintf(stderr, register_to_stat(strace->pid, reg));
+            fprintf(stderr, "%s", register_to_stat(strace->pid, reg));
             break;
         default:
             break;
