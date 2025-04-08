@@ -25,7 +25,7 @@ int parse_arguments(int argc, char **argv, char **env)
         return ERROR;
     }
     if (argc == 2 &&
-        (strcmp(argv[1], "-help") == 0 || strcmp(argv[1], "-h") == 0)) {
+        (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)) {
         return usage(argv[0]);
     }
     if (argc == 3 && strcmp(argv[1], "-p") == 0 && is_number(argv[2])) {
