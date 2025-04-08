@@ -64,4 +64,10 @@ void strace_display_trace(strace_t *strace);
  */
 int *get_type_array(size_t id);
 
+/*
+ * main
+ */
+int parse_arguments(int argc, char **argv, char **env);
+int usage(const char *prgrm);
+
 #endif /* STRACE_H_ */

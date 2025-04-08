@@ -11,6 +11,8 @@ CFLAGS   	= -I./include -std=gnu17 \
           -Wall -Wextra -Werror -pedantic -Wconversion -g3 \
 		  -O3
 
+TEST_FLAGS  = -lcriterion --coverage
+
 LDFLAGS   	= -lelf
 
 SRC_DIR  	= src
@@ -27,7 +29,14 @@ STRACE_SRC 	= $(wildcard $(SRC_DIR)/*.c) \
 STRACE_OBJ  = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, \
 	$(STRACE_SRC))
 
+TEST_SRC    = $(wildcard $(TEST_DIR)/*.c)
+TEST_OBJ 	= $(patsubst $(TEST_DIR)/%.c, $(OBJ_DIR)/$(TEST_DIR)/%.o, \
+	$(TEST_SRC))
+
+OBJ_NO_MAIN := $(filter-out $(OBJ_DIR)/main.o, $(STRACE_OBJ))
+
 STRACE_BIN  = strace
+TEST_BIN    = unit_tests
 
 GREEN      	= \033[1;32m
 RED        	= \033[1;31m
@@ -46,15 +55,26 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(CC) $(CFLAGS) -o $@ -c $<
 	@printf "$(ORANGE)[🚧] BUILDING: $(RST) $(ILC)$<$(RST)\n"
 
+tests_run: $(TEST_OBJ) $(OBJ_NO_MAIN)
+	@$(CC) -o $(TEST_BIN) $(TEST_OBJ) $(OBJ_NO_MAIN) $(TEST_FLAGS)
+	@printf "$(GREEN)[✅] COMPILED: $(RST) $(ILC)$(TEST_BIN)$(RST)\n"
+	@./$(TEST_BIN)
+	@$(GCOVR)
+
+$(OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.c
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -o $@ -c $<
+	@printf "$(ORANGE)[🚧] BUILDING: $(RST) $(ILC)$<$(RST)\n"
+
 clean:
 	@rm -rf lib/$(OBJ_DIR)
 	@rm -rf $(OBJ_DIR)
 	@printf "$(RED)[❌] CLEAN:    $(RST) Removed $(ILC)$(OBJ_DIR)$(RST)\n"
 
 fclean: clean
-	@rm -f $(PROGRAMS) vgcore*
+	@rm -f $(PROGRAMS) vgcore* unit_tests
 	@printf "$(RED)[❌] FCLEAN:   $(RST) Removed $(ILC)executables$(RST)\n"
 
 re: fclean all
 
-.PHONY: all strace clean fclean re
+.PHONY: all strace clean fclean re tests_run
