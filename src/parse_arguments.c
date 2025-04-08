@@ -16,6 +16,15 @@ int usage(const char *prgrm)
     return SUCCESS;
 }
 
+void parse_two_args(int argc, char **argv)
+{
+    if (argc == 2 &&
+        (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)) {
+        exit(usage(argv[0]));
+    }
+    exit(ERROR);
+}
+
 int parse_arguments(int argc, char **argv, char **env)
 {
     strace_t strace = {0};
@@ -24,9 +33,8 @@ int parse_arguments(int argc, char **argv, char **env)
         console_log(stderr, "%s\n%s", STRACE_NO_ARG, STRACE_TRY);
         return ERROR;
     }
-    if (argc == 2 &&
-        (strcmp(argv[1], "-help") == 0 || strcmp(argv[1], "-h") == 0)) {
-        return usage(argv[0]);
+    if (argc == 2) {
+        parse_two_args(argc, argv);
     }
     if (argc == 3 && strcmp(argv[1], "-p") == 0 && is_number(argv[2])) {
         strace.flag.pid = atoi(argv[2]);
