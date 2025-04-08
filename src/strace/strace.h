@@ -17,6 +17,7 @@
     #define     EXIT_SIGNAL     (231)
     #define     EXECVE_SIGNAL   (59)
     #define     MAX_BUFFER      (4096)
+    #define     PROC_PATH       ("/proc/%d/exe")
 
 typedef struct flag_s {
     bool p;
@@ -31,7 +32,7 @@ typedef struct strace_s {
     pid_t pid;
     char **env;
     flag_t flag;
-    const char *prog;
+    char *prog;
     struct user_regs_struct regs;
 } strace_t;
 
