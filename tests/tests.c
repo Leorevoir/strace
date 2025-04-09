@@ -5,7 +5,7 @@
 ** tests
 */
 
-#include "include/unit-tests.h"
+#include "./include/unit-tests.h"
 
 Test(parse_arguments, parse_arguments_tests)
 {
