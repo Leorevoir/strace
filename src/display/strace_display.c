@@ -121,9 +121,13 @@ static void display_syscalls(strace_t *strace)
 {
     fprintf(stderr, "%s(", table[strace->regs.orig_rax].name);
     if (strace->regs.orig_rax == EXECVE_SIGNAL) {
-        fprintf(stderr, "\"%s\", [\"%s\"], %p /* %d vars */) = 0\n",
+        fprintf(stderr, "\"%s\", [\"%s\"], %p /* %d vars */) = ",
             strace->prog, strace->prog, (void *)strace->env,
             strace->env_count);
+        if (!strace->flag.s)
+            fprintf(stderr, "0x0\n");
+        else
+            fprintf(stderr, "0\n");
         return;
     }
     if (strace->flag.s) {
