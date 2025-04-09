@@ -20,17 +20,14 @@ void parse_two_args(int argc, char **argv, strace_t *strace)
 {
     strace->flag.p = false;
     strace->flag.s = false;
-
     if (argc == 2 &&
         (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)) {
         exit(usage(argv[0]));
     }
-    printf("%d %s\n", argc, argv[1]);
     if (argc == 2 && access(argv[1], X_OK) == 0) {
         strace->prog = argv[1];
         return;
     }
-    printf("oui\n");
     exit(ERROR);
 }
 
@@ -56,6 +53,7 @@ int parse_arguments(int argc, char **argv, char **env)
     strace_init(&strace, env);
     return SUCCESS;
 }
+
 int main(int argc, char **argv, char **env)
 {
     return parse_arguments(argc, argv, env);
