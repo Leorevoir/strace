@@ -10,7 +10,7 @@
 
     #include <criterion/criterion.h>
 
-    #include "../../src/strace/strace.h"
+    #include "../../include/strace.h"
 
 
 #endif // !UNIT_TESTS_CRITERION_H_

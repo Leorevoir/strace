@@ -5,9 +5,38 @@
 ** strace_display.c
 */
 
-#include "syscall.h"
+/**
+ * ! Need to specify the path otherwise it get the real syscall.h
+ */
+#include "../../include/syscall.h"
+
+#include "print.h"
 #include <sys/ptrace.h>
 #include <string.h>
+
+static void display_rax_flag_s(strace_t *d)
+{
+    switch (table[d->regs.orig_rax].return_type) {
+        case NUM:
+            fprintf(stderr, "%s\n", register_to_signed(d->pid, d->regs.rax));
+            break;
+        case UNSIGNED:
+            fprintf(stderr, "%s\n", register_to_unsigned(d->pid, d->regs.rax));
+            break;
+        case STRING:
+            fprintf(stderr, "\"%s\"\n",
+                register_to_string(d->pid, d->regs.rax));
+            break;
+        case VOID_P:
+            fprintf(stderr, "NULL\n");
+            break;
+        case STRUCT_STAT_P:
+            fprintf(stderr, "%s\n", register_to_stat(d->pid, d->regs.rax));
+            break;
+        default:
+            fprintf(stderr, "0x%llx\n", d->regs.rax);
+    }
+}
 
 static void display_return(strace_t *strace)
 {
@@ -15,37 +44,21 @@ static void display_return(strace_t *strace)
         fprintf(stderr, "?\n");
         return;
     }
-    fprintf(stderr, "0x%llx\n", strace->regs.rax);
-}
-
-static char *register_to_string(pid_t pid, size_t reg)
-{
-    char __attribute__((cleanup(free_char)))*ptr = NULL;
-    long int rv = 0;
-    size_t size = 0;
-    const size_t long_int_size = sizeof(long int);
-
-    ptr = malloc(MAX_BUFFER);
-    for (;;) {
-        if (size + long_int_size > MAX_BUFFER)
-            ptr = realloc(ptr, sizeof(ptr) * 2);
-        rv = ptrace(PTRACE_PEEKDATA, pid, reg + size);
-        if (rv == -1)
-            return NULL;
-        memcpy(ptr + size, &rv, long_int_size);
-        if (memchr(&rv, 0, long_int_size) != NULL) {
-            break;
-        }
-        size += long_int_size;
+    if (strace->flag.s) {
+        display_rax_flag_s(strace);
+        return;
     }
-    return ptr;
+    fprintf(stderr, "0x%llx\n", strace->regs.rax);
 }
 
 static void s_flag_switch_types(strace_t *strace, int types, size_t reg)
 {
     switch (types) {
         case NUM:
-            fprintf(stderr, "%ld", reg);
+            fprintf(stderr, "%s", register_to_signed(strace->pid, reg));
+            break;
+        case UNSIGNED:
+            fprintf(stderr, "%s", register_to_unsigned(strace->pid, reg));
             break;
         case STRING:
             fprintf(stderr, "\"%s\"",
@@ -53,6 +66,9 @@ static void s_flag_switch_types(strace_t *strace, int types, size_t reg)
             break;
         case VOID_P:
             fprintf(stderr, "NULL");
+            break;
+        case STRUCT_STAT_P:
+            fprintf(stderr, "%s", register_to_stat(strace->pid, reg));
             break;
         default:
             break;
@@ -105,7 +121,13 @@ static void display_syscalls(strace_t *strace)
 {
     fprintf(stderr, "%s(", table[strace->regs.orig_rax].name);
     if (strace->regs.orig_rax == EXECVE_SIGNAL) {
-        fprintf(stderr, "\"%s\", [\"%s\"], ", strace->prog, strace->prog);
+        fprintf(stderr, "\"%s\", [\"%s\"], %p /* %d vars */) = ",
+            strace->prog, strace->prog, (void *)strace->env,
+            strace->env_count);
+        if (!strace->flag.s)
+            fprintf(stderr, "0x0\n");
+        else
+            fprintf(stderr, "0\n");
         return;
     }
     if (strace->flag.s) {

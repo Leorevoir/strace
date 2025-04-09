@@ -23,6 +23,7 @@ PROGRAMS  	= strace
 
 STRACE_SRC 	= $(wildcard $(SRC_DIR)/*.c) \
 		$(wildcard $(SRC_DIR)/strace/*.c) \
+		$(wildcard $(SRC_DIR)/display/*.c) \
 		$(wildcard $(SRC_DIR)/utils/*.c)
 
 STRACE_OBJ  = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, \

@@ -8,8 +8,8 @@
 #ifndef STRACE_H_
     #define STRACE_H_
 
-    #include "../../include/macro.h"
-    #include "../../include/utils.h"
+    #include "macro.h"
+    #include "utils.h"
     #include <sys/types.h>
     #include <sys/user.h>
 
@@ -34,6 +34,7 @@ typedef struct strace_s {
     flag_t flag;
     char *prog;
     struct user_regs_struct regs;
+    int env_count;
 } strace_t;
 
 /*
