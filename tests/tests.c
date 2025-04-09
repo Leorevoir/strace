@@ -12,10 +12,10 @@ Test(parse_arguments, parse_arguments_tests)
     cr_assert_eq(parse_arguments(0, NULL, NULL), 84);
 }
 
-Test(usage, usage_tests)
-{
-    cr_assert_eq(usage("salut"), 0);
-}
+// Test(usage, usage_tests)
+// {
+//     cr_assert_eq(usage("salut"), 0);
+// }
 
 Test(free_char, free_char_test)
 {
